@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 
+/**
+ * Token interpreter ,parse token and operate numbers on token stack
+ */
 @Slf4j
 public class Interpreter implements TokenVisitor {
 
