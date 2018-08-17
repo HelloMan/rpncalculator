@@ -1,20 +1,22 @@
+package calculator.rpn;
+
 import lombok.Data;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.text.DecimalFormat;
 
 @Data
-public class LiteralNode extends SimpleNode {
+public class NumberLiteralToken extends Token {
 
     private String number;
 
     private boolean calculated;
 
-    public LiteralNode(int id,String number){
+    public NumberLiteralToken(int id, String number){
         this(id, number, false);
     }
 
-    public LiteralNode(int id,String number,boolean calculated){
+    public NumberLiteralToken(int id, String number, boolean calculated){
         super(id);
         this.number = number;
         this.calculated = calculated;
@@ -22,7 +24,7 @@ public class LiteralNode extends SimpleNode {
 
     private Number numberObj;
 
-    public LiteralNode(int id,Number number,boolean calculated){
+    public NumberLiteralToken(int id, Number number, boolean calculated){
         super(id);
         this.numberObj = number;
         this.calculated = true;
@@ -51,8 +53,8 @@ public class LiteralNode extends SimpleNode {
     }
 
     @Override
-    void accept(NodeVisitor visitor) {
+    void accept(TokenVisitor visitor) {
 
-        visitor.visitLiteral(this);
+        visitor.visit(this);
     }
 }

@@ -1,3 +1,5 @@
+package calculator.rpn;
+
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.List;
 public class ScriptExpression implements Expression {
 
 
-    private List<SimpleNode> nodes = new ArrayList<>();
+    private List<Token> tokens = new ArrayList<>();
 
     private Interpreter interpreter;
 
@@ -16,9 +18,9 @@ public class ScriptExpression implements Expression {
     }
 
     @Override
-    public String getDisplayValue() {
-        interpreter.interpreter(this);
-        return interpreter.getDisplayValue();
+    public String evaluate() {
+        return interpreter.interpreter(this);
+
     }
 
 

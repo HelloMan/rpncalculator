@@ -1,7 +1,8 @@
+package calculator.rpn;
+
 import org.apache.commons.math.util.MathUtils;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public class Arithmetic {
 
@@ -14,6 +15,16 @@ public class Arithmetic {
 
     private boolean isIntOrLong(Number value) {
         return value !=null && (value instanceof Integer || value instanceof  Long);
+    }
+
+    private Double toDouble(Number value ){
+
+        if (value instanceof Long || value instanceof Long) {
+            return Double.valueOf(value.toString());
+        } else if (value instanceof Double) {
+            return (Double) value;
+        }
+        throw new IllegalArgumentException("value should a long or an integer");
     }
 
     private Long toLong(Number value ){
@@ -55,7 +66,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (isDouble(left) || isDouble(right)) {
-            Double value =  new BigDecimal((Double) left).add(new BigDecimal((Double) right)).doubleValue();
+            Double value =    BigDecimal.valueOf( toDouble(left)).add(  BigDecimal.valueOf(toDouble(right))).doubleValue();
             return value;
         }
 
@@ -73,7 +84,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (isDouble(left) || isDouble(right)) {
-            Double value =  new BigDecimal((Double) left).subtract(new BigDecimal((Double) right)).doubleValue();
+            Double value =  toDouble(left)- toDouble(right) ;
             return value;
         }
         if (isIntOrLong(left) || isIntOrLong(right)) {
@@ -90,7 +101,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (isDouble(left) || isDouble(right)) {
-            Double value =  new BigDecimal((Double) left).multiply(new BigDecimal((Double) right)).doubleValue();
+            Double value =   BigDecimal.valueOf(toDouble(left)).multiply( BigDecimal.valueOf(toDouble( right))).doubleValue();
             return value;
         }
         if (isIntOrLong(left) || isIntOrLong(right)) {
@@ -109,12 +120,12 @@ public class Arithmetic {
         }
         try {
             if (isDouble(left) || isDouble(right)) {
-                Double value = new BigDecimal((Double) left).divide(new BigDecimal((Double) right)).doubleValue();
+                Double value =   BigDecimal.valueOf(toDouble( left)).divide(  BigDecimal.valueOf(toDouble( right))).doubleValue();
                 return value;
             }
             if (isIntOrLong(left) || isIntOrLong(right)) {
 
-                return toLong(left) / toLong(right);
+                return toDouble(left) / toDouble(right);
 
             }
 

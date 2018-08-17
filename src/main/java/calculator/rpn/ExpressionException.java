@@ -1,3 +1,5 @@
+package calculator.rpn;
+
 public class ExpressionException extends RuntimeException {
 
     public ExpressionException() {
