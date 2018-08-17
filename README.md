@@ -11,9 +11,5 @@ mvn clean package
 ### Step 2: Run Application
 
 ```Shell
-cd target
-java -jar rpn-calculator-jar-with-dependencies.jar
+java -jar target/rpn-calculator-jar-with-dependencies.jar
 ```
-
-## TODOS
-
