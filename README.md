@@ -12,8 +12,8 @@ mvn clean package
 
 ```Shell
 cd target
-java -jar rpncalculator-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+java -jar rpn-calculator-jar-with-dependencies.jar
 ```
 
 ## TODOS
-- Add javadoc and comments in the code
+
