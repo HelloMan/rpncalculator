@@ -1,12 +1,20 @@
-# rpncalculator
-
-Step 1 - build application
-
-type "mvn clean package"
-
-Step 2
- Run application by  type "java -jar ${workspace}/target/rpncalculator-1.0-SNAPSHOT-jar-with-dependencies.jar"
-   
-
-
+# RPN Calculator
+Simple project to implement RPN Calculator(Reverse polish natation)
  
+## How to use?
+
+### Step 1: Build Application
+The project uses the `maven-assembly-plugin` plugin that easily creates fat executable jar archive for you:
+```Shell
+mvn clean package
+```
+### Step 2: Run Application
+
+```Shell
+cd target
+java -jar rpncalculator-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+```
+
+## TODOS
+- Add javadoc and comments in the code
+- Add comment to maven.xml to explain each import
