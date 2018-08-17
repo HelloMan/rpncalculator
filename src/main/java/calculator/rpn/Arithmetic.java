@@ -19,7 +19,7 @@ public class Arithmetic {
 
     private Double toDouble(Number value ){
 
-        if (value instanceof Long || value instanceof Long) {
+        if (value instanceof Long || value instanceof Integer) {
             return Double.valueOf(value.toString());
         } else if (value instanceof Double) {
             return (Double) value;
@@ -66,8 +66,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (isDouble(left) || isDouble(right)) {
-            Double value =    BigDecimal.valueOf( toDouble(left)).add(  BigDecimal.valueOf(toDouble(right))).doubleValue();
-            return value;
+            return  BigDecimal.valueOf( toDouble(left)).add(  BigDecimal.valueOf(toDouble(right))).doubleValue();
         }
 
         if (isIntOrLong(left) || isIntOrLong(right)) {
@@ -84,8 +83,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (isDouble(left) || isDouble(right)) {
-            Double value =  toDouble(left)- toDouble(right) ;
-            return value;
+            return  toDouble(left)- toDouble(right) ;
         }
         if (isIntOrLong(left) || isIntOrLong(right)) {
 
@@ -101,8 +99,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (isDouble(left) || isDouble(right)) {
-            Double value =   BigDecimal.valueOf(toDouble(left)).multiply( BigDecimal.valueOf(toDouble( right))).doubleValue();
-            return value;
+            return BigDecimal.valueOf(toDouble(left)).multiply( BigDecimal.valueOf(toDouble( right))).doubleValue();
         }
         if (isIntOrLong(left) || isIntOrLong(right)) {
 
@@ -120,8 +117,7 @@ public class Arithmetic {
         }
         try {
             if (isDouble(left) || isDouble(right)) {
-                Double value =   BigDecimal.valueOf(toDouble( left)).divide(  BigDecimal.valueOf(toDouble( right))).doubleValue();
-                return value;
+                return BigDecimal.valueOf(toDouble( left)).divide(  BigDecimal.valueOf(toDouble( right))).doubleValue();
             }
             if (isIntOrLong(left) || isIntOrLong(right)) {
 

@@ -10,25 +10,21 @@ public class NumberLiteralToken extends Token {
 
     private String number;
 
-    private boolean calculated;
-
-    public NumberLiteralToken(int id, String number){
-        this(id, number, false);
-    }
-
-    public NumberLiteralToken(int id, String number, boolean calculated){
-        super(id);
-        this.number = number;
-        this.calculated = calculated;
-    }
-
     private Number numberObj;
 
-    public NumberLiteralToken(int id, Number number, boolean calculated){
+    public NumberLiteralToken(int id, String number){
+        super(id);
+        this.number = number;
+
+    }
+
+    public NumberLiteralToken(int id, Number number){
         super(id);
         this.numberObj = number;
-        this.calculated = true;
+
     }
+
+
 
     public Number getLiteral(){
 
@@ -42,7 +38,8 @@ public class NumberLiteralToken extends Token {
         return Double.valueOf(number);
     }
 
-    public String formatText(){
+    @Override
+    public String toString(){
         Number value = getLiteral();
         if (value instanceof Double) {
             DecimalFormat decimalFormat = new DecimalFormat("0.##########");

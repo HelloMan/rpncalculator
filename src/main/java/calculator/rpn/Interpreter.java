@@ -3,7 +3,7 @@ package calculator.rpn;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Token interpreter ,parse token and operate numbers on token stack
@@ -11,15 +11,12 @@ import java.util.Iterator;
 @Slf4j
 public class Interpreter implements TokenVisitor {
 
-
     @Getter
-    private final TokenStack tokenStack;
+    private final OperationStack operationStack;
 
-    private final UndoManager undoManager ;
 
-    public Interpreter(){
-        tokenStack = new DefaultTokenStack();
-        undoManager = new UndoManager(tokenStack);
+    public Interpreter() {
+        operationStack = new DefaultOperationStack();
     }
 
     public String interpreter(Expression expression) {
@@ -31,38 +28,21 @@ public class Interpreter implements TokenVisitor {
                 break;
             }
         }
-        return tokenStack.printStack();
+        return operationStack.printStack();
 
     }
 
 
     @Override
     public void visit(BinaryOperatorToken token) {
-        NumberLiteralToken left = null;
-        NumberLiteralToken right = null;
-        Iterator<NumberLiteralToken> nodeIterable = tokenStack.iterator();
-        if (nodeIterable.hasNext()) {
-            right = nodeIterable.next();
-        }
 
-        if (nodeIterable.hasNext()) {
-            left = nodeIterable.next();
-        }
+        Pair<NumberLiteralToken> tokenPair = operationStack.popTokens(token).orElseThrow(
+                () -> new ExpressionException(String.format("Operator %s (position:%d): insufficient parameters",
+                        token.getOperator().getImage(), token.getPosition())));
 
-        if (left == null || right == null) {
-            throw new ExpressionException(String.format("Operator %s (position:%d): insufficient parameters",
-                    token.getOperator().getImage(), token.getPosition()));
-        }
         Arithmetic arithmetic = new Arithmetic();
-        Number value = arithmetic.calculate(left.getLiteral(), right.getLiteral(), token.getOperator());
-        if (value != null) {
-            //popup left and right from stack
-            tokenStack.pop();
-            tokenStack.pop();
-            tokenStack.push(new NumberLiteralToken(-1, value, true));
-            undoManager.apply(right,left);
-        }
-
+        Number value = arithmetic.calculate(tokenPair.getFirst().getLiteral(), tokenPair.getSecond().getLiteral(), token.getOperator());
+        operationStack.pushToken(new NumberLiteralToken(-1, value), true);
     }
 
     @Override
@@ -70,37 +50,32 @@ public class Interpreter implements TokenVisitor {
         if (token.getOperator() != Operator.SQRT) {
             return;
         }
-        NumberLiteralToken node = tokenStack.peek();
-        if (node != null) {
-            tokenStack.pop();
-            Number value = new Arithmetic().sqrt(node.getLiteral());
-            //push back the literal to stack
-            tokenStack.push(new NumberLiteralToken(-1, value, true));
-            undoManager.apply(node);
-            return ;
+        List<NumberLiteralToken> tokens = operationStack.popTokens(token);
+        if (tokens.isEmpty()) {
 
+            throw new ExpressionException(String.format("Operator %s (position:%d): insufficient parameters",
+                    token.getOperator().getImage(), token.getPosition()));
         }
-        throw new ExpressionException(String.format("Operator %s (position:%d): insufficient parameters",
-                token.getOperator().getImage(), token.getPosition()));
 
+        Number value = new Arithmetic().sqrt(tokens.get(0).getLiteral());
+        //pushToken back the literal to stack
+        operationStack.pushToken(new NumberLiteralToken(-1, value), true);
 
     }
 
     @Override
     public void visit(UndoToken token) {
-       undoManager.undo();
+        operationStack.undo();
     }
 
     @Override
     public void visit(ClearToken token) {
-        undoManager.apply(tokenStack.getTokens());
-        tokenStack.clear();
+        operationStack.clear();
     }
 
     @Override
     public void visit(NumberLiteralToken numberASTNode) {
-        tokenStack.push(numberASTNode);
-        undoManager.applyEmpty();
+        operationStack.pushToken(numberASTNode, false);
     }
 
 

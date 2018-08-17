@@ -8,93 +8,60 @@ public class InterpreterTest {
 
     @Test
     public void interpreter() {
-
-        Interpreter interpreter = new Interpreter();
-
         Expression expression = new ScriptEngine().createExpression("1 2 +");
+        String result = new Interpreter().interpreter(expression);
 
-
-        String res =  interpreter.interpreter(expression);
-
-        assertThat(res).isEqualTo("3");
-
+        assertThat(result).isEqualTo("3");
 
     }
 
 
-
     @Test
     public void visitBinOp() {
-
         Interpreter interpreter = new Interpreter();
+        interpreter.visit(new NumberLiteralToken(1, "2"));
+        interpreter.visit(new NumberLiteralToken(2, "3"));
+        interpreter.visit(new BinaryOperatorToken(3, Operator.ADD));
 
-        NumberLiteralToken numberLiteralToken = new NumberLiteralToken(1, "2");
-        interpreter.visit(numberLiteralToken);
-        numberLiteralToken = new NumberLiteralToken(2, "3");
-        interpreter.visit(numberLiteralToken);
-
-        BinaryOperatorToken binaryOperatorToken = new BinaryOperatorToken(3, Operator.ADD);
-        interpreter.visit(binaryOperatorToken);
-
-
-        assertThat(interpreter.getTokenStack().printStack()).isEqualTo("5");
+        assertThat(interpreter.getOperationStack().printStack()).isEqualTo("5");
 
     }
 
     @Test
     public void visitUnaryOp() {
-
         Interpreter interpreter = new Interpreter();
+        interpreter.visit(new NumberLiteralToken(1, "4"));
+        interpreter.visit(new FunctionToken(2, Operator.SQRT));
 
-        NumberLiteralToken numberLiteralToken = new NumberLiteralToken(1, "4");
-        interpreter.visit(numberLiteralToken);
-
-        FunctionToken token = new FunctionToken(3, Operator.SQRT);
-        interpreter.visit(token);
-        assertThat(interpreter.getTokenStack().printStack()).isEqualTo("2");
+        assertThat(interpreter.getOperationStack().printStack()).isEqualTo("2");
     }
 
     @Test
     public void visitUndo() {
-
         Interpreter interpreter = new Interpreter();
+        interpreter.visit(new NumberLiteralToken(1, "4"));
+        interpreter.visit(new NumberLiteralToken(2, "5"));
+        interpreter.visit(new UndoToken(3));
 
-        NumberLiteralToken numberLiteralToken = new NumberLiteralToken(1, "4");
-        interpreter.visit(numberLiteralToken);
-        numberLiteralToken = new NumberLiteralToken(2, "5");
-        interpreter.visit(numberLiteralToken);
-
-        UndoToken undoToken = new UndoToken(3);
-        interpreter.visit(undoToken);
-        assertThat(interpreter.getTokenStack().printStack()).isEqualTo("4");
+        assertThat(interpreter.getOperationStack().printStack()).isEqualTo("4");
     }
 
     @Test
     public void visitClear() {
-
         Interpreter interpreter = new Interpreter();
+        interpreter.visit(new NumberLiteralToken(1, "4"));
+        interpreter.visit(new NumberLiteralToken(2, "5"));
+        interpreter.visit(new ClearToken(3));
 
-        NumberLiteralToken numberLiteralToken = new NumberLiteralToken(1, "4");
-        interpreter.visit(numberLiteralToken);
-        numberLiteralToken = new NumberLiteralToken(2, "5");
-        interpreter.visit(numberLiteralToken);
-
-        ClearToken token = new ClearToken(3 );
-        interpreter.visit(token);
-
-        assertThat(interpreter.getTokenStack().getTokens().size()).isEqualTo(0);
+        assertThat(interpreter.getOperationStack().printStack()).isEqualTo("");
     }
 
     @Test
     public void visitLiteral() {
-
         Interpreter interpreter = new Interpreter();
+        interpreter.visit(new NumberLiteralToken(1, "2"));
+        interpreter.visit(new NumberLiteralToken(2, "3"));
 
-        NumberLiteralToken numberLiteralToken = new NumberLiteralToken(1, "4");
-        interpreter.visit(numberLiteralToken);
-        numberLiteralToken = new NumberLiteralToken(2, "5");
-        interpreter.visit(numberLiteralToken);
-
-        assertThat(interpreter.getTokenStack().getTokens().size()).isEqualTo(2);
+        assertThat(interpreter.getOperationStack().printStack()).isEqualTo("2 3");
     }
 }
