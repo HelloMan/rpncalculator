@@ -1,3 +1,5 @@
+import org.apache.commons.math.util.MathUtils;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -12,6 +14,16 @@ public class Arithmetic {
 
     private boolean isIntOrLong(Number value) {
         return value !=null && (value instanceof Integer || value instanceof  Long);
+    }
+
+    private Long toLong(Number value ){
+        if (value instanceof Integer) {
+            return Long.valueOf(value.toString());
+        }
+        if (value instanceof Long) {
+            return (Long)value;
+        }
+        throw new IllegalArgumentException("value should a long or an integer");
     }
 
 
@@ -49,7 +61,7 @@ public class Arithmetic {
 
         if (isIntOrLong(left) || isIntOrLong(right)) {
 
-            return BigInteger.valueOf((Long) left).add(BigInteger.valueOf((Long) right)).longValue();
+            return MathUtils.addAndCheck(toLong(left), toLong(right));
         }
 
         throw new IllegalArgumentException("parameter should be an integer or a long or a double type");
@@ -66,7 +78,8 @@ public class Arithmetic {
         }
         if (isIntOrLong(left) || isIntOrLong(right)) {
 
-           return  BigInteger.valueOf((Long) left).subtract(BigInteger.valueOf((Long) right)).longValue();
+            return MathUtils.subAndCheck(toLong(left), toLong(right));
+
         }
         throw new IllegalArgumentException("parameter should be an integer or a long or a double type");
     }
@@ -82,8 +95,9 @@ public class Arithmetic {
         }
         if (isIntOrLong(left) || isIntOrLong(right)) {
 
-           return  BigInteger.valueOf((Long) left).multiply(BigInteger.valueOf((Long) right)).longValue();
+            return MathUtils.mulAndCheck(toLong(left), toLong(right));
         }
+
         throw new IllegalArgumentException("parameter should be an integer or a long or a double type");
     }
 
@@ -100,8 +114,8 @@ public class Arithmetic {
             }
             if (isIntOrLong(left) || isIntOrLong(right)) {
 
-                Long value = BigInteger.valueOf((Long) left).divide(BigInteger.valueOf((Long) right)).longValue();
-                return value;
+                return toLong(left) / toLong(right);
+
             }
 
             throw new IllegalArgumentException("parameter should be an integer or a long or a double type");
