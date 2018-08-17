@@ -49,7 +49,7 @@ public class InterpreterTest {
         NumberLiteralToken numberLiteralToken = new NumberLiteralToken(1, "4");
         interpreter.visit(numberLiteralToken);
 
-        UnaryOperatorToken token = new UnaryOperatorToken(3, Operator.SQRT);
+        FunctionToken token = new FunctionToken(3, Operator.SQRT);
         interpreter.visit(token);
         assertThat(interpreter.getTokenStack().printStack()).isEqualTo("2");
     }

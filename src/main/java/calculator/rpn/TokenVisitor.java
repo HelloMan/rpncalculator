@@ -4,7 +4,7 @@ public interface TokenVisitor {
 
     void visit(BinaryOperatorToken token);
 
-    void visit(UnaryOperatorToken token);
+    void visit(FunctionToken token);
 
     void visit(UndoToken token);
 

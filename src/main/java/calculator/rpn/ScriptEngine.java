@@ -27,7 +27,7 @@ public class ScriptEngine {
             Operator operator = Operator.getOperator(token).orElseThrow(() -> new ExpressionException("token " + token + "is not a valid operator"));
             switch (operator) {
                 case SQRT:
-                    node = new UnaryOperatorToken(position, operator);
+                    node = new FunctionToken(position, operator);
                     break;
                 case ADD:
                 case SUB:

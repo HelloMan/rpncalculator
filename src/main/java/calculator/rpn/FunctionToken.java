@@ -1,9 +1,9 @@
 package calculator.rpn;
 
-public class UnaryOperatorToken extends OperatorToken {
+public class FunctionToken extends OperatorToken {
 
 
-    public UnaryOperatorToken(int id, Operator op) {
+    public FunctionToken(int id, Operator op) {
         super(id,op);
     }
 

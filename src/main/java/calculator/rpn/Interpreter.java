@@ -63,7 +63,7 @@ public class Interpreter implements TokenVisitor {
     }
 
     @Override
-    public void visit(UnaryOperatorToken token) {
+    public void visit(FunctionToken token) {
         if (token.getOperator() != Operator.SQRT) {
             return;
         }
