@@ -1,14 +1,10 @@
 # rpncalculator
 
-Step 1
+Step 1 - build application
 
-Clone repository into your workspace
+type "mvn clean package"
 
 Step 2
-
-Build application by type "mvn clean package", which will create a fat jar under directory of ${workspace}/target/rpncalculator-1.0-SNAPSHOT-jar-with-dependencies.jar
-
-Step 3
  Run application by  type "java -jar ${workspace}/target/rpncalculator-1.0-SNAPSHOT-jar-with-dependencies.jar"
    
 
