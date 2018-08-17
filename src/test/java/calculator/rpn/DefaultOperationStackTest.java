@@ -26,13 +26,15 @@ public class DefaultOperationStackTest {
 
         DefaultOperationStack res = new DefaultOperationStack();
         res.pushToken(new NumberLiteralToken(1, "3"),false);
-        res.pushToken(new NumberLiteralToken(1, "3"),false);
+        res.pushToken(new NumberLiteralToken(1, "4"),false);
 
         assertThat(res.getTokens().size()).isEqualTo(2);
         assertThat(res.getUndoActions().size()).isEqualTo(2);
 
         Optional<Pair<NumberLiteralToken>> tokenPair = res.popTokens(new BinaryOperatorToken(3, Operator.ADD));
         assertThat(tokenPair.isPresent()).isTrue();
+        assertThat(tokenPair.get().getFirst().getNumber()).isEqualTo(3l);
+        assertThat(tokenPair.get().getSecond().getNumber()).isEqualTo(4l);
         assertThat(res.getTokens().isEmpty()).isTrue();
 
         assertThat(res.getUndoActions().size()).isEqualTo(3);

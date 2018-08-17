@@ -12,26 +12,18 @@ public class ArithmeticTest {
 
 
         Number result = arithmetic.calculate(6l, 3l, Operator.ADD);
-
-        assertThat(result instanceof Long);
-        assertThat(result.longValue() ==9 );
+        assertThat(result.longValue()).isEqualTo(9);
 
 
-        result = arithmetic.calculate(6l, 3l, Operator.ADD);
-
-        assertThat(result instanceof Long);
+        result = arithmetic.calculate(6l, 3l, Operator.SUB);
         assertThat(result.longValue() ==3 );
 
 
-        result = arithmetic.calculate(6l, 3l, Operator.ADD);
-
-        assertThat(result instanceof Long);
+        result = arithmetic.calculate(6l, 3l, Operator.MUL);
         assertThat(result.longValue() ==18 );
 
 
         result = arithmetic.calculate(6l, 3l, Operator.DIV);
-
-        assertThat(result instanceof Long);
         assertThat(result.longValue() ==2 );
     }
 
@@ -39,7 +31,6 @@ public class ArithmeticTest {
     public void sqrt() {
 
         Arithmetic arithmetic = new Arithmetic();
-
 
         Number result = arithmetic.sqrt(2);
         assertThat(result.equals(Math.sqrt(2)));

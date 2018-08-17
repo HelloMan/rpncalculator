@@ -63,6 +63,7 @@
 
 
     <build>
+        <finalName>rpn-calculator</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

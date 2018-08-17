@@ -41,7 +41,7 @@ public class Interpreter implements TokenVisitor {
                         token.getOperator().getImage(), token.getPosition())));
 
         Arithmetic arithmetic = new Arithmetic();
-        Number value = arithmetic.calculate(tokenPair.getFirst().getLiteral(), tokenPair.getSecond().getLiteral(), token.getOperator());
+        Number value = arithmetic.calculate(tokenPair.getFirst().getNumber(), tokenPair.getSecond().getNumber(), token.getOperator());
         operationStack.pushToken(new NumberLiteralToken(-1, value), true);
     }
 
@@ -57,7 +57,7 @@ public class Interpreter implements TokenVisitor {
                     token.getOperator().getImage(), token.getPosition()));
         }
 
-        Number value = new Arithmetic().sqrt(tokens.get(0).getLiteral());
+        Number value = new Arithmetic().sqrt(tokens.get(0).getNumber());
         //pushToken back the literal to stack
         operationStack.pushToken(new NumberLiteralToken(-1, value), true);
 

@@ -8,13 +8,13 @@ import java.text.DecimalFormat;
 @Data
 public class NumberLiteralToken extends Token {
 
-    private String number;
+    private String literal;
 
     private Number numberObj;
 
-    public NumberLiteralToken(int id, String number){
+    public NumberLiteralToken(int id, String literal){
         super(id);
-        this.number = number;
+        this.literal = literal;
 
     }
 
@@ -24,23 +24,20 @@ public class NumberLiteralToken extends Token {
 
     }
 
-
-
-    public Number getLiteral(){
-
+    public Number getNumber(){
         if (numberObj != null) {
             return numberObj;
         }
 
-        if (NumberUtils.isDigits(number)){
-            return Long.valueOf(number);
+        if (NumberUtils.isDigits(literal)){
+            return Long.valueOf(literal);
         }
-        return Double.valueOf(number);
+        return Double.valueOf(literal);
     }
 
     @Override
     public String toString(){
-        Number value = getLiteral();
+        Number value = getNumber();
         if (value instanceof Double) {
             DecimalFormat decimalFormat = new DecimalFormat("0.##########");
             return decimalFormat.format(value);
@@ -51,7 +48,6 @@ public class NumberLiteralToken extends Token {
 
     @Override
     void accept(TokenVisitor visitor) {
-
         visitor.visit(this);
     }
 }
