@@ -39,6 +39,9 @@ public class Arithmetic {
 
 
     public Number calculate(Number left, Number right, Operator operator) {
+        if (left == null || right == null) {
+            controlNullOperand();
+        }
         Number value = null;
         switch (operator) {
             case ADD:
@@ -62,9 +65,7 @@ public class Arithmetic {
 
     private   Number add(Number left, Number right) {
 
-        if (left == null || right == null) {
-            controlNullOperand();
-        }
+
         if (isDouble(left) || isDouble(right)) {
             return  BigDecimal.valueOf( toDouble(left)).add(  BigDecimal.valueOf(toDouble(right))).doubleValue();
         }
@@ -79,9 +80,7 @@ public class Arithmetic {
 
     private   Number sub(Number left, Number right) {
 
-        if (left == null || right == null) {
-            controlNullOperand();
-        }
+
         if (isDouble(left) || isDouble(right)) {
             return  toDouble(left)- toDouble(right) ;
         }
@@ -95,9 +94,6 @@ public class Arithmetic {
 
     private   Number mul(Number left, Number right) {
 
-        if (left == null || right == null) {
-            controlNullOperand();
-        }
         if (isDouble(left) || isDouble(right)) {
             return BigDecimal.valueOf(toDouble(left)).multiply( BigDecimal.valueOf(toDouble( right))).doubleValue();
         }
@@ -112,9 +108,6 @@ public class Arithmetic {
 
     private   Number div(Number left, Number right) {
 
-        if (left == null || right == null) {
-            controlNullOperand();
-        }
         try {
             if (isDouble(left) || isDouble(right)) {
                 return BigDecimal.valueOf(toDouble( left)).divide(  BigDecimal.valueOf(toDouble( right))).doubleValue();
