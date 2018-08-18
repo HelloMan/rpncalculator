@@ -1,47 +1,82 @@
 package calculator.rpn;
 
-import org.apache.commons.math.util.MathUtils;
+import org.apache.commons.math3.exception.MathArithmeticException;
+import org.apache.commons.math3.exception.util.LocalizedFormats;
+import org.apache.commons.math3.util.ArithmeticUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class Arithmetic {
 
-    private class NullOperand extends ArithmeticException{}
+    private class NullOperand extends ArithmeticException {
+    }
+
+    private boolean isLong(Number value) {
+        return value != null && value instanceof Long;
+    }
 
     private boolean isDouble(Number value) {
 
         return value != null && value instanceof Double;
     }
 
-    private boolean isIntOrLong(Number value) {
-        return value !=null && (value instanceof Integer || value instanceof  Long);
+    private Integer toInteger(Number value) {
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+        throw new ClassCastException(String.format("Can not cast %s to a Integer ", value.getClass()));
     }
 
-    private Double toDouble(Number value ){
 
+    private Long toLong(Number value) {
+        if (value instanceof Integer) {
+            return Long.valueOf(value.toString());
+        } else if (value instanceof Long) {
+            return (long) value;
+        }
+        throw new ClassCastException(String.format("Can not cast %s to a Long ", value.getClass()));
+    }
+
+
+    private Double toDouble(Number value) {
         if (value instanceof Long || value instanceof Integer) {
             return Double.valueOf(value.toString());
         } else if (value instanceof Double) {
             return (Double) value;
         }
-        throw new IllegalArgumentException("value should a long or an integer");
+        throw new ClassCastException(String.format("Can not cast %s to a Double ", value.getClass()));
     }
 
-    private Long toLong(Number value ){
+    private BigDecimal toBigDecimal(Number value) {
         if (value instanceof Integer) {
-            return Long.valueOf(value.toString());
+            return BigDecimal.valueOf(Long.valueOf(value.toString()));
         }
+
         if (value instanceof Long) {
-            return (Long)value;
+            return BigDecimal.valueOf((long)value);
         }
-        throw new IllegalArgumentException("value should a long or an integer");
+        if (value instanceof Double) {
+            return BigDecimal.valueOf((double) value);
+        }
+        if (value instanceof BigInteger) {
+            return new BigDecimal((BigInteger)value);
+        }
+        if (value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        }
+        throw new ClassCastException(String.format("Can not cast %s to a BigDecimal ", value.getClass()));
+    }
+
+    private boolean isValidNumber(Number value) {
+        return value instanceof Integer
+                || value instanceof Long
+                || value instanceof Double;
     }
 
 
     public Number calculate(Number left, Number right, Operator operator) {
-        if (left == null || right == null) {
-            controlNullOperand();
-        }
+
         Number value = null;
         switch (operator) {
             case ADD:
@@ -63,71 +98,97 @@ public class Arithmetic {
 
     }
 
-    private   Number add(Number left, Number right) {
-
+    private Number add(Number left, Number right) {
+        if (left == null || right == null) {
+            controlNullOperand();
+        }
+        if (!isValidNumber(left) || !isValidNumber(right)) {
+            throw new UnsupportedOperationException("Invalid number");
+        }
 
         if (isDouble(left) || isDouble(right)) {
-            return  BigDecimal.valueOf( toDouble(left)).add(  BigDecimal.valueOf(toDouble(right))).doubleValue();
-        }
 
-        if (isIntOrLong(left) || isIntOrLong(right)) {
-
-            return MathUtils.addAndCheck(toLong(left), toLong(right));
-        }
-
-        throw new IllegalArgumentException("parameter should be an integer or a long or a double type");
-    }
-
-    private   Number sub(Number left, Number right) {
-
-
-        if (isDouble(left) || isDouble(right)) {
-            return  toDouble(left)- toDouble(right) ;
-        }
-        if (isIntOrLong(left) || isIntOrLong(right)) {
-
-            return MathUtils.subAndCheck(toLong(left), toLong(right));
-
-        }
-        throw new IllegalArgumentException("parameter should be an integer or a long or a double type");
-    }
-
-    private   Number mul(Number left, Number right) {
-
-        if (isDouble(left) || isDouble(right)) {
-            return BigDecimal.valueOf(toDouble(left)).multiply( BigDecimal.valueOf(toDouble( right))).doubleValue();
-        }
-        if (isIntOrLong(left) || isIntOrLong(right)) {
-
-            return MathUtils.mulAndCheck(toLong(left), toLong(right));
-        }
-
-        throw new IllegalArgumentException("parameter should be an integer or a long or a double type");
-    }
-
-
-    private   Number div(Number left, Number right) {
-
-        try {
-            if (isDouble(left) || isDouble(right)) {
-                return BigDecimal.valueOf(toDouble( left)).divide(  BigDecimal.valueOf(toDouble( right))).doubleValue();
+            BigDecimal value = toBigDecimal(left).add(toBigDecimal(right));
+            if (value.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) > 0
+                    || value.compareTo(BigDecimal.valueOf(Double.MIN_VALUE)) < 0) {
+                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_ADDITION, left, right);
             }
-            if (isIntOrLong(left) || isIntOrLong(right)) {
+            return value.doubleValue();
 
-                return toDouble(left) / toDouble(right);
-
-            }
-
-            throw new IllegalArgumentException("parameter should be an integer or a long or a double type");
-        } catch (ArithmeticException e) {
-            throw new ExpressionException(e);
         }
+        if (isLong(left) || isLong(right)) {
+            return ArithmeticUtils.addAndCheck(toLong(left), toLong(right));
+        }
+        return ArithmeticUtils.addAndCheck(toInteger(left), toInteger(right));
+
+    }
+
+    private Number sub(Number left, Number right) {
+        if (left == null || right == null) {
+            controlNullOperand();
+        }
+        if (!isValidNumber(left) || !isValidNumber(right)) {
+            throw new UnsupportedOperationException("Invalid number");
+        }
+        if (isDouble(left) || isDouble(right)) {
+            BigDecimal value = toBigDecimal(left).subtract(toBigDecimal(right));
+            if (value.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) > 0
+                    || value.compareTo(BigDecimal.valueOf(Double.MIN_VALUE)) < 0) {
+                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_SUBTRACTION, left, right);
+            }
+            return value.doubleValue();
+        }
+
+        if (isLong(left) || isLong(right)) {
+            return ArithmeticUtils.subAndCheck(toLong(left), toLong(right));
+        }
+        return ArithmeticUtils.subAndCheck(toInteger(left), toInteger(right));
+    }
+
+    private Number mul(Number left, Number right) {
+        if (left == null || right == null) {
+            controlNullOperand();
+        }
+        if (!isValidNumber(left) || !isValidNumber(right)) {
+            throw new UnsupportedOperationException("Invalid number");
+        }
+        if (isDouble(left) || isDouble(right)) {
+            BigDecimal value = toBigDecimal(left).multiply(toBigDecimal(right));
+            if (value.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) > 0
+                    || value.compareTo(BigDecimal.valueOf(Double.MIN_VALUE)) < 0) {
+                throw new MathArithmeticException(LocalizedFormats.OVERFLOW_IN_SUBTRACTION, left, right);
+            }
+            return value.doubleValue();
+        }
+
+        if (isLong(left) || isLong(right)) {
+            return ArithmeticUtils.mulAndCheck(toLong(left), toLong(right));
+        }
+        return ArithmeticUtils.mulAndCheck(toInteger(left), toInteger(right));
+
+    }
+
+
+    private Number div(Number left, Number right) {
+        if (left == null || right == null) {
+            controlNullOperand();
+        }
+        if (!isValidNumber(left) || !isValidNumber(right)) {
+            throw new UnsupportedOperationException("Invalid number");
+        }
+        if (toDouble(right) == 0) {
+            throw new ArithmeticException("Divide by zero");
+        }
+        return toDouble(left) / toDouble(right);
+
     }
 
     public Number sqrt(Number value) {
-
         if (value == null) {
             controlNullOperand();
+        }
+        if (!isValidNumber(value)) {
+            throw new UnsupportedOperationException("Invalid number");
         }
 
         return Math.sqrt((value).doubleValue());

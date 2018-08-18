@@ -33,8 +33,8 @@ public class DefaultOperationStackTest {
 
         Optional<Pair<NumberLiteralToken>> tokenPair = res.popTokens(new BinaryOperatorToken(3, Operator.ADD));
         assertThat(tokenPair.isPresent()).isTrue();
-        assertThat(tokenPair.get().getFirst().getNumber()).isEqualTo(3l);
-        assertThat(tokenPair.get().getSecond().getNumber()).isEqualTo(4l);
+        assertThat(tokenPair.get().getFirst().getNumber()).isEqualTo(3);
+        assertThat(tokenPair.get().getSecond().getNumber()).isEqualTo(4);
         assertThat(res.getTokens().isEmpty()).isTrue();
 
         assertThat(res.getUndoActions().size()).isEqualTo(3);

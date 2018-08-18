@@ -1,6 +1,7 @@
 package calculator.rpn;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.text.DecimalFormat;
@@ -28,11 +29,24 @@ public class NumberLiteralToken extends Token {
         if (numberObj != null) {
             return numberObj;
         }
-
-        if (NumberUtils.isDigits(literal)){
-            return Long.valueOf(literal);
+        if (StringUtils.isNotEmpty(literal) && NumberUtils.isCreatable(literal)){
+            return  toNumber();
         }
-        return Double.valueOf(literal);
+        throw new IllegalArgumentException(String.format(" %s is not a valid number", literal));
+    }
+
+    private Number toNumber() {
+        Number value;
+        try {
+            value = Integer.valueOf(literal);
+        } catch (NumberFormatException e) {
+            try {
+                value = Long.valueOf(literal);
+            } catch (NumberFormatException e1) {
+                value = Double.valueOf(literal);
+            }
+        }
+        return value;
     }
 
     @Override
