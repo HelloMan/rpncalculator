@@ -103,7 +103,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (!isValidNumber(left) || !isValidNumber(right)) {
-            throw new UnsupportedOperationException("Invalid number");
+            throw new IllegalArgumentException("Invalid number");
         }
 
         if (isDouble(left) || isDouble(right)) {
@@ -128,7 +128,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (!isValidNumber(left) || !isValidNumber(right)) {
-            throw new UnsupportedOperationException("Invalid number");
+            throw new IllegalArgumentException("Invalid number");
         }
         if (isDouble(left) || isDouble(right)) {
             BigDecimal value = toBigDecimal(left).subtract(toBigDecimal(right));
@@ -150,7 +150,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (!isValidNumber(left) || !isValidNumber(right)) {
-            throw new UnsupportedOperationException("Invalid number");
+            throw new IllegalArgumentException("Invalid number");
         }
         if (isDouble(left) || isDouble(right)) {
             BigDecimal value = toBigDecimal(left).multiply(toBigDecimal(right));
@@ -174,7 +174,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (!isValidNumber(left) || !isValidNumber(right)) {
-            throw new UnsupportedOperationException("Invalid number");
+            throw new IllegalArgumentException("Invalid number");
         }
         if (toDouble(right) == 0) {
             throw new ArithmeticException("Divide by zero");
@@ -188,7 +188,7 @@ public class Arithmetic {
             controlNullOperand();
         }
         if (!isValidNumber(value)) {
-            throw new UnsupportedOperationException("Invalid number");
+            throw new IllegalArgumentException("Invalid number");
         }
 
         return Math.sqrt((value).doubleValue());
