@@ -22,37 +22,30 @@ public class ScriptEngine {
     }
 
     private Token parseToken(int position, String token) {
-        Token node = null;
+
         if (Operator.isOperator(token)) {
             Operator operator = Operator.getOperator(token).orElseThrow(() -> new ExpressionException("token " + token + "is not a valid operator"));
             switch (operator) {
                 case SQRT:
-                    node = new FunctionToken(position, operator);
-                    break;
+                    return new FunctionToken(position, operator);
                 case ADD:
                 case SUB:
                 case MUL:
                 case DIV:
-                    node = new BinaryOperatorToken(position, operator);
-                    break;
+                    return  new BinaryOperatorToken(position, operator);
                 case UNDO:
-                    node = new UndoToken(position);
-                    break;
+                    return new UndoToken(position);
                 case CLEAR:
-                    node = new ClearToken(position);
-                    break;
-                default:
-                    break;
+                    return new ClearToken(position);
 
             }
 
         } else if (NumberUtils.isCreatable(token)) {
-            node = new NumberLiteralToken(position, token);
-        } else {
-
-            throw new ExpressionException(String.format("Invalid token %s (position:%d)", token, position));
+            return new NumberLiteralToken(position, token);
         }
-        return node;
+
+        throw new ExpressionException(String.format("Invalid token %s (position:%d)", token, position));
+
     }
 
 

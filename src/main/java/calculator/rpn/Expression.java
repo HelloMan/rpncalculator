@@ -5,7 +5,7 @@ import java.util.List;
 public interface Expression {
 
     /**
-     * @return original
+     * @return number on the stack
      */
     String evaluate();
 

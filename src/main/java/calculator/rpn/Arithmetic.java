@@ -191,7 +191,7 @@ public class Arithmetic {
             throw new IllegalArgumentException("Invalid number");
         }
 
-        return Math.sqrt((value).doubleValue());
+        return Math.sqrt(toDouble(value));
     }
 
     private void controlNullOperand() {

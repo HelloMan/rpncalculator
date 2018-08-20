@@ -15,14 +15,14 @@ public interface OperationStack {
     void pushToken(NumberLiteralToken token,boolean calculated);
 
     /**
-     * pop  number tokens for the binary operator token
+     * pop  number tokens from stack for the binary operator token
      * @param token
      * @return a pair of  number tokens
      */
     Optional<Pair<NumberLiteralToken>> popTokens(BinaryOperatorToken token);
 
     /**
-     * pop number Tokens for the function token
+     * pop number Tokens from stack for the function token
      * @param token
      * @return a collection of number token
      */
